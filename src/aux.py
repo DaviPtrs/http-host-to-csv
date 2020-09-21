@@ -12,6 +12,15 @@ def validate_port(port):
         return False
     return 0 < int_port < 65535
 
+def find_host_url(cat_output):
+    # ([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?
+    re_results = re.findall(r"(ServerName|server_name) ([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?", cat_output.decode('utf-8'))
+    for result in re_results:
+        host = result[1]
+        if 'example' not in host:
+            return host
+    return None
+
 def find_port(cat_output):
     proxy_entry = re.search(r"(?<=\/\/)([^:]+):?(.*)", cat_output.decode('utf-8'))
     if proxy_entry == None:
