@@ -3,6 +3,7 @@ from src.aux import *
 from src.yaml import get_target_servers
 import collections
 import pathlib
+from src.spreadsheets import *
 
 def generate_csv(name, data: dict):
     print(f"Generating CSV to file {name}")
@@ -52,5 +53,6 @@ for target_server in TARGET_SERVER_LIST:
     output = get_host_port_list(target_server)
     print(output)
     generate_csv('out/' + target_server['ip'], output)
-
+    
+join_csvs('./out/')
 

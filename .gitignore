@@ -130,3 +130,5 @@ dmypy.json
 
 out/*.csv
 config.yaml
+
+**.xlsx
