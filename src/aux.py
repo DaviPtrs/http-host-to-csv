@@ -13,7 +13,6 @@ def validate_port(port):
     return 0 < int_port < 65535
 
 def find_host_url(cat_output):
-    # ([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?
     re_results = re.findall(r"(ServerName|server_name) ([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?", cat_output.decode('utf-8'))
     for result in re_results:
         host = result[1]
@@ -21,17 +20,20 @@ def find_host_url(cat_output):
             return host
     return None
 
-def find_port(cat_output):
-    proxy_entry = re.search(r"(?<=\/\/)([^:]+):?(.*)", cat_output.decode('utf-8'))
-    if proxy_entry == None:
+def find_port(cat_output, server):
+    if server == 'nginx':
+        proxy_entry = re.search(r"proxy_pass\s+https?:\/\/(?:[^:]+):?(\d+)?\s*\;", cat_output.decode('utf-8'))
+    else:
+        proxy_entry = re.search(r"ProxyPass\s+.+?\s+https?:\/\/(?:[^:]+):?(\d+)?\s*", cat_output.decode('utf-8'))
+
+    if proxy_entry is None:
        return None
     else:
-        proxy_entry = proxy_entry.group(2)
-    port = re.search(r'[0-9]+', proxy_entry)
-    if port == None:
+        port = proxy_entry.group(1)
+
+    if port is None:
        return None
-    else:
-        port = port.group(0)
+    
     if validate_port(port):
         return port
     else:

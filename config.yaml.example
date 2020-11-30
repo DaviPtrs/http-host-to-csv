@@ -1,0 +1,9 @@
+hosts:
+  - ip: server1.example.com
+    http_server: nginx
+    user: ubuntu
+    key_path: /path/to/ssh/key
+  - ip: server2.example.com
+    http_server: apache
+    user: bolinha
+    key_path: /path/to/ssh/key
