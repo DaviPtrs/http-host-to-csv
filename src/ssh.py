@@ -1,7 +1,7 @@
 from paramiko import SSHClient, AutoAddPolicy
  
 class SSH:
-    def __init__(self, host, user, key_path):
+    def __init__(self, host, user, key_path=None):
         self.ssh = SSHClient()
         self.ssh.load_system_host_keys()
         self.ssh.set_missing_host_key_policy(AutoAddPolicy())

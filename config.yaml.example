@@ -2,8 +2,8 @@ hosts:
   - ip: server1.example.com
     http_server: nginx
     user: ubuntu
-    key_path: /path/to/ssh/key
+    key_path: /path/to/ssh/key (optional)
   - ip: server2.example.com
     http_server: apache
     user: bolinha
-    key_path: /path/to/ssh/key
+    key_path: /path/to/ssh/key (optional)

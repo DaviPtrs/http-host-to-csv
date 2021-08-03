@@ -20,7 +20,7 @@ def generate_csv(name, data: dict):
 
 def get_host_port_list(target_host: dict):
     print(f"\033[95m{target_host['ip']}:\033[0m")
-    ssh = SSH(target_host['ip'], target_host['user'], target_host['key_path'])
+    ssh = SSH(target_host['ip'], target_host['user'], target_host.get('key_path'))
 
     server = target_host['http_server']
     if server == 'apache':
