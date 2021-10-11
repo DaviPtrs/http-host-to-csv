@@ -5,16 +5,13 @@ import collections
 import pathlib
 from src.spreadsheets import *
 
-def generate_csv(name, data: dict):
+def generate_csv(name, data: list):
     print(f"Generating CSV to file {name}")
-    od = collections.OrderedDict(sorted(data.items()))
     with open(name + '.csv', 'w') as file:
-        file.write('Porta, Hosts\n')
-        for porta, hosts in od.items():
-            file.write(f'{porta},{hosts[0]}\n')
-            if len(hosts) > 1:
-                for host in hosts[1:]:
-                    file.write(f',{host}\n')
+        file.write(f'containers\n')
+        for container in data:
+            file.write(f'{container}\n')
+
     print(f"CSV to {name} generated!")
 
 
@@ -28,23 +25,12 @@ def get_host_port_list(target_host: dict):
     elif server == 'nginx':
         hosts_path = '/etc/nginx/sites-enabled'
 
-    ls_output = ssh.exec_cmd(f'ls {hosts_path}')
+    ls_output = ssh.exec_cmd("docker ps --format '{{.Names}}'")
 
     CONFIG_LIST = ls_handler(ls_output)
 
-    output = dict()
+    return CONFIG_LIST
 
-    for config in CONFIG_LIST:
-        cat_output = ssh.exec_cmd(f'cat {hosts_path}/{config}')
-        port = find_port(cat_output, server)
-        host = find_host_url(cat_output)
-        if port != None and host != None:
-            port = int(port)
-            if not output.get(port):
-                output[port] = list()
-            output[port].append(host)
-            print(f"Config: {host} Port: {port}")
-    return output
 
 DEFAULT_PATH = pathlib.Path(__file__).parent.absolute()
 TARGET_SERVER_LIST = get_target_servers(str(DEFAULT_PATH) + '/config.yaml')
